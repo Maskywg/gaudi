@@ -419,7 +419,7 @@ footer a { color:rgba(196,146,12,.5); text-decoration:none; }
   <!-- 誕生立面 -->
   <div class="facade-detail active" id="fd-nativity">
     <div class="fd-hero">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Sagrada_Fam%C3%ADlia._Nativity_Facade.jpg/800px-Sagrada_Fam%C3%ADlia._Nativity_Facade.jpg" alt="誕生立面全景" loading="lazy">
+      <img src="facade-imgs/nativity-full-sm.jpg" alt="誕生立面全景" loading="lazy">
       <div class="fd-hero-badge"><span class="fd-badge-dir">東側 ☀</span><span class="fd-badge-status done">已完成 · UNESCO 1984</span></div>
     </div>
     <div class="fd-body">
@@ -434,7 +434,7 @@ footer a { color:rgba(196,146,12,.5); text-decoration:none; }
         </ul>
       </div>
       <div class="fd-gallery">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Sagrada_Familia_nativity_facade_detail2.JPG/640px-Sagrada_Familia_nativity_facade_detail2.JPG" alt="誕生立面雕刻細節" loading="lazy">
+        <img src="facade-imgs/nativity-detail-sm.jpg" alt="誕生立面雕刻細節" loading="lazy">
         <img src="imgs/img_007_p8.png" alt="誕生立面有機生命裝飾" loading="lazy">
       </div>
     </div>
@@ -443,7 +443,7 @@ footer a { color:rgba(196,146,12,.5); text-decoration:none; }
   <!-- 受難立面 -->
   <div class="facade-detail" id="fd-passion">
     <div class="fd-hero">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Barcelona_-_La_Sagrada_Fam%C3%ADlia_-_Passion_Fa%C3%A7ade_-_View_East.jpg/960px-Barcelona_-_La_Sagrada_Fam%C3%ADlia_-_Passion_Fa%C3%A7ade_-_View_East.jpg" alt="受難立面全景" loading="lazy">
+      <img src="facade-imgs/passion-full.jpg" alt="受難立面全景" loading="lazy">
       <div class="fd-hero-badge"><span class="fd-badge-dir">西側 ✟</span><span class="fd-badge-status done">已完成 · 1976–2005</span></div>
     </div>
     <div class="fd-body">
@@ -459,7 +459,7 @@ footer a { color:rgba(196,146,12,.5); text-decoration:none; }
       </div>
       <div class="fd-gallery">
         <img src="imgs/img_008_p9.png" alt="受難立面骨感雕塑" loading="lazy">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Passion_facade_of_the_Sagrada_Familia%2C_February_2013_-_01.jpg/640px-Passion_facade_of_the_Sagrada_Familia%2C_February_2013_-_01.jpg" alt="受難立面細節" loading="lazy">
+        <img src="imgs/img_008_p9.png" alt="受難立面細節" loading="lazy">
       </div>
     </div>
   </div>
@@ -772,6 +772,14 @@ function speakSlide(btn, idx){
   btn.classList.add('speaking');
   btn.innerHTML = ICON_STOP + ' 停止朗讀';
 
+  // 朗讀開始：背景音樂降到 15%
+  const bgm = document.getElementById('bgm');
+  if(bgm && !bgm.paused) bgm.volume = 0.15;
+
+  function restoreMusic(){
+    if(bgm && !bgm.paused) bgm.volume = 1;
+  }
+
   // 停止按鈕
   btn.onclick = ()=>{
     audio.pause();
@@ -779,6 +787,7 @@ function speakSlide(btn, idx){
     btn.classList.remove('speaking');
     btn.innerHTML = ICON_PLAY + ' 聆聽朗讀';
     btn.onclick = ()=> speakSlide(btn, idx);
+    restoreMusic();
   };
 
   audio.onended = ()=>{
@@ -786,11 +795,13 @@ function speakSlide(btn, idx){
     btn.classList.remove('speaking');
     btn.innerHTML = ICON_PLAY + ' 聆聽朗讀';
     btn.onclick = ()=> speakSlide(btn, idx);
+    restoreMusic();
   };
   audio.onerror = ()=>{
     btn.classList.remove('speaking');
     btn.innerHTML = ICON_PLAY + ' 聆聽朗讀';
     btn.onclick = ()=> speakSlide(btn, idx);
+    restoreMusic();
     console.warn('音檔載入失敗:', src);
   };
   audio.play();
