@@ -132,21 +132,30 @@ p { font-size:1rem; line-height:1.95; color:var(--text-sub); margin-bottom:1rem;
 .news-intro { max-width:700px; margin-bottom:3rem; }
 .slide {
   display:grid; grid-template-columns:1fr 1fr;
-  gap:0; margin-bottom:4px; background:#fff;
+  gap:0; margin-bottom:6px; background:#fff;
   border:1px solid var(--border); border-radius:3px; overflow:hidden;
   opacity:0; transform:translateY(28px);
   transition:opacity .7s ease, transform .7s ease;
 }
 .slide.visible { opacity:1; transform:none; }
-.slide:nth-child(even) { direction:rtl; }
-.slide:nth-child(even) > * { direction:ltr; }
-.slide-img { position:relative; overflow:hidden; min-height:300px; }
-.slide-img img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s; }
-.slide:hover .slide-img img { transform:scale(1.03); }
+.slide:nth-child(even) .slide-img { order:2; }
+.slide:nth-child(even) .slide-body { order:1; }
+.slide-img {
+  position:relative;
+  background:#000;
+  display:flex; align-items:center; justify-content:center;
+}
+.slide-img img {
+  width:100%; height:auto;
+  display:block;
+  max-height:500px;
+  object-fit:contain;
+}
 .slide-num {
-  position:absolute; top:1rem; left:1rem;
+  position:absolute; top:.8rem; left:.8rem;
   background:var(--bg-dark); color:var(--amber);
-  font-size:.68rem; letter-spacing:.2em; padding:.3rem .7rem; border-radius:2px;
+  font-size:.65rem; letter-spacing:.2em; padding:.28rem .65rem; border-radius:2px;
+  z-index:1;
 }
 .slide-body { padding:2.5rem 2.8rem; display:flex; flex-direction:column; justify-content:center; background:var(--cream); }
 .news-kicker {
@@ -612,9 +621,9 @@ const slides = [
 ];
 
 // Render slides
+const ICON_PLAY = `<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>`;
+const ICON_STOP = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
 const container = document.getElementById('slides-container');
-let currentUtterance = null;
-
 slides.forEach((s,i)=>{
   const el = document.createElement('div');
   el.className = 'slide';
@@ -636,72 +645,50 @@ slides.forEach((s,i)=>{
 });
 
 /* ═══════════════════════════════════
-   3. VOICE (Web Speech API)
+   3. 台灣男聲 MP3 播放器
 ═══════════════════════════════════ */
-let voicesLoaded = false;
-let maleVoice = null;
-
-// Known male zh voices by name (Chrome/Edge/macOS/Windows)
-const MALE_VOICE_NAMES = [
-  'google 普通话（中国大陆）','google 國語（臺灣）',
-  'yunxi','yunyang','yunjian','kangkang','zhiyu',
-  'sin-ji','tsin-ji','mingming','xiaoming',
-  'male','man','he ','biao','jun','wei',
-  'thomas','daniel','alex','jorge','xiang'
-];
-
-function pickMaleVoice(){
-  const vs = speechSynthesis.getVoices();
-  if(!vs.length) return null;
-  // 1. exact male keyword match
-  for(const kw of MALE_VOICE_NAMES){
-    const found = vs.find(v=>v.name.toLowerCase().includes(kw));
-    if(found) return found;
-  }
-  // 2. zh-TW or zh-CN (usually more neutral than Meijia on macOS)
-  const zhTW = vs.find(v=>v.lang==='zh-TW'&&!v.name.toLowerCase().includes('mei'));
-  if(zhTW) return zhTW;
-  const zhCN = vs.find(v=>v.lang==='zh-CN'&&!/ting|mei|xiao|female|woman/i.test(v.name));
-  if(zhCN) return zhCN;
-  return vs.find(v=>v.lang.startsWith('zh')) || vs[0];
-}
-
-function loadVoices(){
-  if(speechSynthesis.getVoices().length) voicesLoaded = true;
-  maleVoice = pickMaleVoice();
-}
-speechSynthesis.onvoiceschanged = loadVoices;
-loadVoices();
+let currentAudio = null;
 
 function speakSlide(btn, idx){
-  speechSynthesis.cancel();
-  const allBtns = document.querySelectorAll('.voice-btn');
-  allBtns.forEach(b=>{ b.classList.remove('speaking'); b.innerHTML=`<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg> 聆聽朗讀`; });
+  // 停止所有播放
+  if(currentAudio){
+    currentAudio.pause();
+    currentAudio = null;
+  }
+  document.querySelectorAll('.voice-btn').forEach(b=>{
+    b.classList.remove('speaking');
+    b.innerHTML = ICON_PLAY + ' 聆聽朗讀';
+  });
 
-  if(!('speechSynthesis' in window)){ alert('您的瀏覽器不支援語音合成'); return; }
-
-  maleVoice = pickMaleVoice();
-  const u = new SpeechSynthesisUtterance(slides[idx].text);
-  u.lang = 'zh-TW';
-  u.rate = 0.85;
-  u.pitch = 0;    // 0 = 最低音調，最接近男聲
-  u.volume = 1;
-  if(maleVoice) u.voice = maleVoice;
+  const src = `audio/slide_${String(idx).padStart(2,'0')}.mp3`;
+  const audio = new Audio(src);
+  currentAudio = audio;
 
   btn.classList.add('speaking');
-  btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg> 停止朗讀`;
+  btn.innerHTML = ICON_STOP + ' 停止朗讀';
 
-  u.onend = u.onerror = ()=>{
+  // 停止按鈕
+  btn.onclick = ()=>{
+    audio.pause();
+    currentAudio = null;
     btn.classList.remove('speaking');
-    btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg> 聆聽朗讀`;
+    btn.innerHTML = ICON_PLAY + ' 聆聽朗讀';
+    btn.onclick = ()=> speakSlide(btn, idx);
   };
-  btn.onclick = function(){
-    speechSynthesis.cancel();
+
+  audio.onended = ()=>{
+    currentAudio = null;
     btn.classList.remove('speaking');
-    btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg> 聆聽朗讀`;
-    btn.onclick = function(){ speakSlide(btn,idx); };
+    btn.innerHTML = ICON_PLAY + ' 聆聽朗讀';
+    btn.onclick = ()=> speakSlide(btn, idx);
   };
-  speechSynthesis.speak(u);
+  audio.onerror = ()=>{
+    btn.classList.remove('speaking');
+    btn.innerHTML = ICON_PLAY + ' 聆聽朗讀';
+    btn.onclick = ()=> speakSlide(btn, idx);
+    console.warn('音檔載入失敗:', src);
+  };
+  audio.play();
 }
 
 /* ═══════════════════════════════════
