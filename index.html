@@ -197,25 +197,55 @@ p { font-size:1rem; line-height:1.95; color:var(--text-sub); margin-bottom:1rem;
 .geo-card p { font-size:.88rem; margin:0; }
 
 /* ── FACADES ── */
-#facades { background:var(--bg-dark); }
+#facades { background:var(--bg-dark); padding-bottom:3rem; }
 #facades .sec-label { color:var(--amber); }
 #facades h2 { color:#f5e8cc; }
 #facades > .sec-inner > p { color:rgba(240,220,180,0.75); }
-.facade-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1px; margin-top:2rem; }
-.facade-panel { padding:3rem 2rem; text-align:center; border:1px solid rgba(201,168,76,0.1); }
-.facade-panel.nativity { background:linear-gradient(160deg,#0d1a0a,#091209); }
-.facade-panel.passion  { background:linear-gradient(160deg,#180808,#200a0a); }
-.facade-panel.glory    { background:linear-gradient(160deg,#0a0d1a,#080814); }
-.facade-symbol { font-size:2.8rem; display:block; margin-bottom:.9rem; }
-.facade-panel h3 { color:#f5e8cc; font-size:1.15rem; letter-spacing:.08em; margin:0 0 .5rem; }
-.facade-tag {
-  display:inline-block; font-size:.63rem; letter-spacing:.28em;
-  padding:.28rem .8rem; border-radius:2px; margin-bottom:.9rem;
+
+.facade-tabs { display:flex; gap:0; justify-content:center; margin:2rem 0 0; flex-wrap:wrap; }
+.ftab {
+  padding:.75rem 2rem; background:transparent; border:1px solid rgba(201,168,76,0.25);
+  color:rgba(240,220,180,0.55); font-size:.85rem; letter-spacing:.12em; cursor:pointer;
+  transition:all .3s; border-right:none;
 }
-.nativity .facade-tag { background:rgba(80,160,80,.15); color:#8fd88f; border:1px solid rgba(80,160,80,.3); }
-.passion  .facade-tag { background:rgba(200,60,60,.15);  color:#e08888; border:1px solid rgba(200,60,60,.3); }
-.glory    .facade-tag { background:rgba(80,120,200,.15); color:#88aaee; border:1px solid rgba(80,120,200,.3); }
-.facade-panel p { font-size:.88rem; line-height:1.75; color:rgba(240,220,180,.7); }
+.ftab:last-child { border-right:1px solid rgba(201,168,76,0.25); }
+.ftab:hover { color:#f5e8cc; background:rgba(201,168,76,0.08); }
+.ftab.active { background:rgba(201,168,76,0.18); color:var(--gold); border-color:rgba(201,168,76,0.5); }
+
+.facade-detail { display:none; max-width:1100px; margin:0 auto; }
+.facade-detail.active { display:block; }
+
+.fd-hero { position:relative; width:100%; max-height:520px; overflow:hidden; background:#0a0a0a; }
+.fd-hero img { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; max-height:520px; }
+.fd-hero-badge {
+  position:absolute; bottom:1.2rem; left:1.5rem; display:flex; gap:.6rem; align-items:center;
+}
+.fd-badge-dir {
+  background:rgba(0,0,0,0.7); color:#f5e8cc; font-size:.78rem;
+  padding:.35rem .8rem; letter-spacing:.15em; border:1px solid rgba(201,168,76,0.4);
+}
+.fd-badge-status {
+  font-size:.72rem; padding:.35rem .8rem; letter-spacing:.1em;
+}
+.fd-badge-status.done { background:rgba(80,160,80,0.25); color:#8fd88f; border:1px solid rgba(80,160,80,0.4); }
+.fd-badge-status.wip  { background:rgba(80,120,220,0.25); color:#88aaee; border:1px solid rgba(80,120,220,0.4); }
+
+.fd-body { display:grid; grid-template-columns:1fr 1fr; gap:0; }
+@media(max-width:700px){ .fd-body { grid-template-columns:1fr; } }
+
+.fd-info { padding:2.5rem 2rem; background:#0f0e0d; }
+.fd-info h3 { color:#f5e8cc; font-size:1.3rem; margin:0 0 1rem; line-height:1.4; }
+.fd-sub { font-size:.75rem; letter-spacing:.18em; color:var(--amber); font-weight:400; }
+.fd-info p { color:rgba(240,220,180,.75); line-height:1.8; font-size:.92rem; margin:0 0 1.2rem; }
+.fd-facts { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:.6rem; }
+.fd-facts li { font-size:.83rem; color:rgba(240,220,180,.6); line-height:1.6; padding:.5rem .8rem; background:rgba(201,168,76,0.05); border-left:2px solid rgba(201,168,76,0.3); }
+
+.fd-gallery { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:#111; }
+.fd-gallery img { width:100%; height:100%; object-fit:cover; display:block; aspect-ratio:4/3; }
+.fd-gallery-single { display:block; }
+.fd-gallery-single img { height:auto; aspect-ratio:auto; }
+
+.fd-credit { text-align:center; font-size:.7rem; color:rgba(240,220,180,.3); letter-spacing:.1em; margin-top:1.5rem; padding:0 1rem; }
 
 /* ── TOWER TABLE ── */
 #towers { background:var(--bg2); }
@@ -376,13 +406,88 @@ footer a { color:rgba(196,146,12,.5); text-decoration:none; }
   <div class="sec-inner">
     <p class="sec-label reveal">三大立面</p>
     <h2 class="reveal">刻在石頭上的立體聖經</h2>
-    <p class="reveal" style="max-width:640px;">高第將聖家堂構想為一部石刻聖經，使信眾僅憑凝視建築，便能領悟基督信仰的歷史與奧義。</p>
+    <p class="reveal" style="max-width:640px;">高第將聖家堂構想為一部石刻聖經，使信眾僅憑凝視建築，便能領悟基督信仰的歷史與奧義。三座立面各述一章——誕生、受難、榮耀——東西南三方，讀遍生命的全程。</p>
   </div>
-  <div class="facade-row reveal">
-    <div class="facade-panel nativity"><span class="facade-symbol">☀</span><span class="facade-tag">東側 · 已完成</span><h3>誕生立面</h3><p>耶穌降生的喜悅、萬物復甦。繁複有機裝飾，融入烏龜、變色龍等生命元素。高第生前唯一親自主導的立面，1984年列為世界文化遺產。</p></div>
-    <div class="facade-panel passion"><span class="facade-symbol">✟</span><span class="facade-tag">西側 · 已完成</span><h3>受難立面</h3><p>耶穌受難與死亡的悲劇感。線條簡潔剛硬，蘇比拉奇斯的骨架雕塑傳達極致痛苦，與誕生立面形成強烈對比。</p></div>
-    <div class="facade-panel glory"><span class="facade-symbol">✦</span><span class="facade-tag">南側 · 建設中</span><h3>榮耀立面</h3><p>人類的起源、審判、救贖與永恆榮耀。規模最宏大的主入口，預計2034–2035年完工，設有橫跨馬略卡街的巨型階梯。</p></div>
+
+  <!-- 立面切換標籤 -->
+  <div class="facade-tabs reveal">
+    <button class="ftab active" data-facade="nativity">☀ 誕生立面</button>
+    <button class="ftab" data-facade="passion">✟ 受難立面</button>
+    <button class="ftab" data-facade="glory">✦ 榮耀立面</button>
   </div>
+
+  <!-- 誕生立面 -->
+  <div class="facade-detail active" id="fd-nativity">
+    <div class="fd-hero">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Sagrada_Fam%C3%ADlia._Nativity_Facade.jpg/800px-Sagrada_Fam%C3%ADlia._Nativity_Facade.jpg" alt="誕生立面全景" loading="lazy">
+      <div class="fd-hero-badge"><span class="fd-badge-dir">東側 ☀</span><span class="fd-badge-status done">已完成 · UNESCO 1984</span></div>
+    </div>
+    <div class="fd-body">
+      <div class="fd-info">
+        <h3>誕生立面<br><span class="fd-sub">Façana del Naixement</span></h3>
+        <p>面向清晨的第一道陽光，誕生立面是高第生前唯一親手主導的篇章。三座門廊分別獻給聖父、聖子、聖靈，滿布烏龜、變色龍、蝸牛與植物，宣告生命降臨的無盡喜悅。</p>
+        <ul class="fd-facts">
+          <li>🐢 柱腳由烏龜和海龜承托，象徵海陸永恆</li>
+          <li>🌿 125種植物物種刻入石面</li>
+          <li>👼 約30位天使圍繞中央耶穌降生場景</li>
+          <li>⭐ 頂部賽普勒斯樹上有一顆五角星</li>
+        </ul>
+      </div>
+      <div class="fd-gallery">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Sagrada_Familia_nativity_facade_detail2.JPG/640px-Sagrada_Familia_nativity_facade_detail2.JPG" alt="誕生立面雕刻細節" loading="lazy">
+        <img src="imgs/img_007_p8.png" alt="誕生立面有機生命裝飾" loading="lazy">
+      </div>
+    </div>
+  </div>
+
+  <!-- 受難立面 -->
+  <div class="facade-detail" id="fd-passion">
+    <div class="fd-hero">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Barcelona_-_La_Sagrada_Fam%C3%ADlia_-_Passion_Fa%C3%A7ade_-_View_East.jpg/960px-Barcelona_-_La_Sagrada_Fam%C3%ADlia_-_Passion_Fa%C3%A7ade_-_View_East.jpg" alt="受難立面全景" loading="lazy">
+      <div class="fd-hero-badge"><span class="fd-badge-dir">西側 ✟</span><span class="fd-badge-status done">已完成 · 1976–2005</span></div>
+    </div>
+    <div class="fd-body">
+      <div class="fd-info">
+        <h3>受難立面<br><span class="fd-sub">Façana de la Passió</span></h3>
+        <p>面向夕陽的受難立面，是高第刻意設計為「令人不寒而慄」的空間。雕塑家蘇比拉奇斯以骨骼般的裸線條、扭曲的人體，傳達耶穌受難的沉重痛苦——沒有一絲多餘的裝飾。</p>
+        <ul class="fd-facts">
+          <li>💀 18根骨架狀柱子，如肋骨般撐起立面</li>
+          <li>🔤 銅門鑄入8,000個新約字元</li>
+          <li>🎲 猶大之吻旁的魔方刻有數學謎題</li>
+          <li>😭 S形敘事動線帶領眼睛讀完受難全程</li>
+        </ul>
+      </div>
+      <div class="fd-gallery">
+        <img src="imgs/img_008_p9.png" alt="受難立面骨感雕塑" loading="lazy">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Passion_facade_of_the_Sagrada_Familia%2C_February_2013_-_01.jpg/640px-Passion_facade_of_the_Sagrada_Familia%2C_February_2013_-_01.jpg" alt="受難立面細節" loading="lazy">
+      </div>
+    </div>
+  </div>
+
+  <!-- 榮耀立面 -->
+  <div class="facade-detail" id="fd-glory">
+    <div class="fd-hero" style="background:#0a0c18;">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/SF_-_Gloria_%282022%29.jpg/960px-SF_-_Gloria_%282022%29.jpg" alt="榮耀立面現況" loading="lazy">
+      <div class="fd-hero-badge"><span class="fd-badge-dir">南側 ✦</span><span class="fd-badge-status wip">建設中 · 預計2034</span></div>
+    </div>
+    <div class="fd-body">
+      <div class="fd-info">
+        <h3>榮耀立面<br><span class="fd-sub">Façana de la Glòria</span></h3>
+        <p>規模最宏大的主入口，象徵人類靈魂的最終旅程——起源、審判、死亡與永恆救贖。完工後將有巨型階梯橫跨馬略卡街，是聖家堂最後的拼圖。</p>
+        <ul class="fd-facts">
+          <li>🏛 完工後將成為三大立面中最高最寬的</li>
+          <li>🌉 主階梯將跨越整條馬略卡街道</li>
+          <li>🔥 七宗罪與七聖事將雕刻其上</li>
+          <li>📅 預計2034–2035年完工，趕上聖家堂全竣工</li>
+        </ul>
+      </div>
+      <div class="fd-gallery fd-gallery-single">
+        <img src="imgs/img_009_p10.png" alt="榮耀立面概念與現況" loading="lazy" style="width:100%;height:auto;">
+      </div>
+    </div>
+  </div>
+
+  <p class="fd-credit reveal">圖片來源：Wikimedia Commons（CC BY-SA）· 本 PDF 製作：Masky Wang</p>
 </div>
 
 <!-- ═══ TOWERS ═══ -->
@@ -722,6 +827,16 @@ const ro = new IntersectionObserver(entries=>{
   entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
 },{threshold:.1});
 document.querySelectorAll('.reveal, .slide').forEach(el=>ro.observe(el));
+
+/* ── Facade tabs ── */
+document.querySelectorAll('.ftab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.facade-detail').forEach(d=>d.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('fd-'+btn.dataset.facade).classList.add('active');
+  });
+});
 </script>
 </body>
 </html>
