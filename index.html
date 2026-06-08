@@ -641,17 +641,34 @@ slides.forEach((s,i)=>{
 let voicesLoaded = false;
 let maleVoice = null;
 
-function loadVoices(){
+// Known male zh voices by name (Chrome/Edge/macOS/Windows)
+const MALE_VOICE_NAMES = [
+  'google 普通话（中国大陆）','google 國語（臺灣）',
+  'yunxi','yunyang','yunjian','kangkang','zhiyu',
+  'sin-ji','tsin-ji','mingming','xiaoming',
+  'male','man','he ','biao','jun','wei',
+  'thomas','daniel','alex','jorge','xiang'
+];
+
+function pickMaleVoice(){
   const vs = speechSynthesis.getVoices();
-  if(!vs.length) return;
-  voicesLoaded = true;
-  // Prefer zh male, fallback to lower pitch
-  maleVoice =
-    vs.find(v=>v.lang.startsWith('zh')&&/male|man|he|ming|biao/i.test(v.name)) ||
-    vs.find(v=>v.lang.startsWith('zh-TW')) ||
-    vs.find(v=>v.lang.startsWith('zh')) ||
-    vs.find(v=>/daniel|alex|jorge|thomas/i.test(v.name)) ||
-    vs[0];
+  if(!vs.length) return null;
+  // 1. exact male keyword match
+  for(const kw of MALE_VOICE_NAMES){
+    const found = vs.find(v=>v.name.toLowerCase().includes(kw));
+    if(found) return found;
+  }
+  // 2. zh-TW or zh-CN (usually more neutral than Meijia on macOS)
+  const zhTW = vs.find(v=>v.lang==='zh-TW'&&!v.name.toLowerCase().includes('mei'));
+  if(zhTW) return zhTW;
+  const zhCN = vs.find(v=>v.lang==='zh-CN'&&!/ting|mei|xiao|female|woman/i.test(v.name));
+  if(zhCN) return zhCN;
+  return vs.find(v=>v.lang.startsWith('zh')) || vs[0];
+}
+
+function loadVoices(){
+  if(speechSynthesis.getVoices().length) voicesLoaded = true;
+  maleVoice = pickMaleVoice();
 }
 speechSynthesis.onvoiceschanged = loadVoices;
 loadVoices();
@@ -663,11 +680,11 @@ function speakSlide(btn, idx){
 
   if(!('speechSynthesis' in window)){ alert('您的瀏覽器不支援語音合成'); return; }
 
-  loadVoices();
+  maleVoice = pickMaleVoice();
   const u = new SpeechSynthesisUtterance(slides[idx].text);
   u.lang = 'zh-TW';
-  u.rate = 0.88;
-  u.pitch = 0.7;  // lower = more male-sounding
+  u.rate = 0.85;
+  u.pitch = 0;    // 0 = 最低音調，最接近男聲
   u.volume = 1;
   if(maleVoice) u.voice = maleVoice;
 
