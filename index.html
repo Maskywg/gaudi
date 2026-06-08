@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>永恆聖家堂 · 高第逝世百週年 1926–2026</title>
+<style>
+  :root {
+    --gold: #c9a84c;
+    --amber: #e8b84b;
+    --deep: #0a0608;
+    --stone: #1a1412;
+    --glass-blue: rgba(80,140,200,0.18);
+    --glass-amber: rgba(220,160,60,0.18);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--deep);
+    color: #e8dcc8;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    overflow-x: hidden;
+  }
+
+  /* ── AUDIO ── */
+  #audio-ctrl {
+    position: fixed; bottom: 2rem; right: 2rem;
+    z-index: 999;
+    background: rgba(0,0,0,0.6);
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    width: 52px; height: 52px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all .3s;
+    backdrop-filter: blur(8px);
+  }
+  #audio-ctrl:hover { background: rgba(201,168,76,0.2); transform: scale(1.1); }
+  #audio-ctrl svg { width:22px; height:22px; fill: var(--gold); }
+
+  /* ── HERO ── */
+  #hero {
+    height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 60%, #1a0a00 0%, #000 70%);
+  }
+  #hero::before {
+    content:'';
+    position:absolute; inset:0;
+    background:
+      radial-gradient(ellipse 60% 80% at 50% 100%, rgba(201,168,76,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 30%, rgba(80,140,200,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 80% 20%, rgba(220,100,60,0.06) 0%, transparent 60%);
+    animation: lightpulse 8s ease-in-out infinite alternate;
+  }
+  @keyframes lightpulse {
+    0%  { opacity:.6; }
+    100%{ opacity:1; }
+  }
+
+  .hero-towers {
+    width: 100%; max-width: 900px;
+    display: flex; justify-content: center;
+    gap: 6px;
+    margin-bottom: 2.5rem;
+    position: relative; z-index:1;
+  }
+  .tower {
+    width: 8px;
+    background: linear-gradient(to top, var(--gold), rgba(201,168,76,0.1));
+    border-radius: 4px 4px 0 0;
+    animation: towergrow 3s ease-out forwards;
+    opacity: 0;
+  }
+  @keyframes towergrow {
+    from { transform: scaleY(0); opacity:0; transform-origin: bottom; }
+    to   { transform: scaleY(1); opacity:1; transform-origin: bottom; }
+  }
+
+  #hero h1 {
+    font-size: clamp(2.2rem, 6vw, 5rem);
+    font-weight: 300;
+    letter-spacing: .15em;
+    text-align: center;
+    color: #fff;
+    text-shadow: 0 0 40px rgba(201,168,76,0.5);
+    position: relative; z-index:1;
+    animation: fadein 2s 1s both;
+  }
+  #hero .subtitle {
+    margin-top: 1.2rem;
+    font-size: clamp(0.9rem, 2vw, 1.2rem);
+    letter-spacing: .3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    text-align: center;
+    position: relative; z-index:1;
+    animation: fadein 2s 1.5s both;
+  }
+  #hero .year-badge {
+    margin-top: 2rem;
+    font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+    letter-spacing: .2em;
+    color: rgba(232,220,200,0.5);
+    text-align: center;
+    position: relative; z-index:1;
+    animation: fadein 2s 2s both;
+  }
+  .scroll-hint {
+    position:absolute; bottom: 2.5rem;
+    left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center;
+    gap: .5rem; color: rgba(201,168,76,0.5);
+    font-size:.75rem; letter-spacing:.2em;
+    animation: bounce 2s infinite;
+  }
+  .scroll-hint::after {
+    content:''; display:block;
+    width:1px; height:40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+  }
+  @keyframes bounce {
+    0%,100%{ transform:translateX(-50%) translateY(0); }
+    50%    { transform:translateX(-50%) translateY(8px); }
+  }
+  @keyframes fadein {
+    from { opacity:0; transform: translateY(20px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top:0; z-index: 100;
+    background: rgba(10,6,8,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    display: flex; justify-content: center;
+    gap: 2rem;
+    padding: .9rem 1rem;
+    flex-wrap: wrap;
+  }
+  nav a {
+    color: rgba(232,220,200,0.7);
+    text-decoration: none;
+    font-size:.8rem;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    transition: color .3s;
+  }
+  nav a:hover { color: var(--gold); }
+
+  /* ── SECTIONS ── */
+  section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+  }
+  section.full-bleed {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .section-label {
+    font-size: .7rem;
+    letter-spacing: .4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    opacity:.8;
+  }
+  h2 {
+    font-size: clamp(1.6rem, 4vw, 2.8rem);
+    font-weight: 300;
+    line-height: 1.3;
+    color: #fff;
+    margin-bottom: 1.5rem;
+  }
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: var(--amber);
+    margin: 2rem 0 .8rem;
+    letter-spacing: .05em;
+  }
+  p {
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: rgba(232,220,200,0.85);
+    margin-bottom: 1.2rem;
+  }
+
+  /* divider */
+  .divider {
+    width: 60px; height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: 1.5rem 0;
+  }
+
+  /* ── CENTENARY BANNER ── */
+  #centenary {
+    background: linear-gradient(135deg, #0d0800 0%, #1a0e00 50%, #0a0608 100%);
+    border-top: 1px solid rgba(201,168,76,0.15);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  #centenary::before {
+    content:'';
+    position:absolute; inset:0;
+    background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(201,168,76,0.06) 0%, transparent 70%);
+  }
+  .centenary-date {
+    font-size: clamp(3rem, 10vw, 8rem);
+    font-weight: 200;
+    color: var(--gold);
+    letter-spacing: .1em;
+    opacity:.15;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .centenary-content { position:relative; z-index:1; }
+  .countdown-grid {
+    display: flex; justify-content: center; gap: 3rem;
+    margin-top: 2rem; flex-wrap: wrap;
+  }
+  .cnt-item { text-align:center; }
+  .cnt-num {
+    font-size: clamp(2rem,5vw,3.5rem);
+    font-weight:200; color:#fff;
+    display:block;
+  }
+  .cnt-label {
+    font-size:.7rem; letter-spacing:.3em;
+    color: var(--gold); text-transform:uppercase;
+  }
+
+  /* ── GEOMETRY ── */
+  #geometry {
+    background: var(--stone);
+  }
+  .geo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  .geo-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 4px;
+    padding: 1.8rem;
+    transition: border-color .3s, background .3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .geo-card::before {
+    content:'';
+    position:absolute; top:0; left:0; right:0;
+    height:2px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    opacity:0; transition: opacity .3s;
+  }
+  .geo-card:hover { border-color: rgba(201,168,76,0.4); background: rgba(201,168,76,0.04); }
+  .geo-card:hover::before { opacity:1; }
+  .geo-icon { font-size:2rem; margin-bottom:1rem; }
+  .geo-card h3 { margin-top:0; font-size:1rem; }
+  .geo-card p { font-size:.9rem; margin:0; }
+
+  /* ── FACADES ── */
+  .facade-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px;
+    margin-top: 2rem;
+    background: rgba(201,168,76,0.1);
+  }
+  .facade-panel {
+    padding: 3rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .facade-panel.nativity  { background: linear-gradient(160deg, #0d1a0a 0%, #081008 100%); }
+  .facade-panel.passion   { background: linear-gradient(160deg, #0f0808 0%, #1a0808 100%); }
+  .facade-panel.glory     { background: linear-gradient(160deg, #0a0d1a 0%, #080812 100%); }
+  .facade-symbol { font-size:3rem; margin-bottom:1rem; display:block; }
+  .facade-panel h3 {
+    color: #fff; font-size:1.2rem; margin:0 0 .5rem;
+    letter-spacing:.1em;
+  }
+  .facade-tag {
+    display:inline-block;
+    font-size:.65rem; letter-spacing:.3em;
+    padding:.3rem .8rem;
+    border-radius:2px;
+    margin-bottom:1rem;
+  }
+  .nativity  .facade-tag { background: rgba(80,160,80,0.2);  color:#8fd88f; border:1px solid rgba(80,160,80,0.3); }
+  .passion   .facade-tag { background: rgba(200,60,60,0.2);  color:#e08888; border:1px solid rgba(200,60,60,0.3); }
+  .glory     .facade-tag { background: rgba(80,120,200,0.2); color:#88aaee; border:1px solid rgba(80,120,200,0.3); }
+  .facade-panel p { font-size:.9rem; line-height:1.7; color:rgba(232,220,200,0.7); }
+
+  /* ── TOWERS TABLE ── */
+  .tower-table {
+    width:100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+    font-size:.9rem;
+  }
+  .tower-table th {
+    text-align:left;
+    padding:.8rem 1rem;
+    color: var(--gold);
+    font-weight:400;
+    letter-spacing:.1em;
+    border-bottom: 1px solid rgba(201,168,76,0.25);
+    font-size:.75rem;
+    text-transform:uppercase;
+  }
+  .tower-table td {
+    padding:.85rem 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: rgba(232,220,200,0.8);
+    vertical-align:top;
+  }
+  .tower-table tr:hover td { background: rgba(201,168,76,0.04); }
+  .complete { color: #7ec87e; }
+  .pending  { color: #e0c060; }
+
+  /* ── VIRTUAL TOUR ── */
+  #virtual-tour {
+    background: #05030a;
+    border-top: 1px solid rgba(201,168,76,0.15);
+    padding: 5rem 0 0;
+  }
+  #virtual-tour .inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem 2rem;
+  }
+  .tour-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin: 2rem 0 1.5rem;
+  }
+  .tour-tab {
+    padding: .5rem 1.2rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 2px;
+    cursor: pointer;
+    font-size:.8rem;
+    letter-spacing:.1em;
+    color: rgba(232,220,200,0.65);
+    transition: all .25s;
+    font-family: inherit;
+  }
+  .tour-tab:hover { border-color: var(--gold); color:#fff; }
+  .tour-tab.active { background: rgba(201,168,76,0.12); border-color: var(--gold); color: var(--gold); }
+  .tour-frame-wrap {
+    width:100%;
+    height: 600px;
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 4px;
+    overflow: hidden;
+    background: #000;
+  }
+  .tour-frame-wrap iframe {
+    width:100%; height:100%;
+    border:none;
+  }
+  .tour-note {
+    margin-top:1rem;
+    font-size:.75rem;
+    color: rgba(232,220,200,0.4);
+    text-align:center;
+    letter-spacing:.1em;
+  }
+
+  /* ── PHOTO ── */
+  #photos {
+    background: var(--stone);
+  }
+  .photo-hero {
+    width:100%;
+    max-height: 520px;
+    object-fit: cover;
+    border-radius: 4px;
+    display:block;
+    border: 1px solid rgba(201,168,76,0.15);
+  }
+  .photo-pair {
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:1rem;
+    margin-top:1rem;
+  }
+  .photo-pair img {
+    width:100%; height:300px;
+    object-fit:cover;
+    border-radius:4px;
+    border: 1px solid rgba(201,168,76,0.1);
+    transition: transform .4s, border-color .4s;
+  }
+  .photo-pair img:hover { transform:scale(1.02); border-color: rgba(201,168,76,0.4); }
+
+  /* ── QUOTE ── */
+  .blockquote-section {
+    text-align: center;
+    padding: 5rem 2rem;
+    background: linear-gradient(to bottom, var(--deep), var(--stone));
+    position: relative;
+    overflow: hidden;
+  }
+  .blockquote-section::before {
+    content:'❝';
+    position:absolute;
+    font-size:20rem;
+    color:rgba(201,168,76,0.03);
+    top:-3rem; left:50%;
+    transform: translateX(-50%);
+    line-height:1;
+    pointer-events:none;
+  }
+  blockquote {
+    max-width:700px;
+    margin: 0 auto;
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.6;
+    color: rgba(232,220,200,0.9);
+    position:relative; z-index:1;
+  }
+  cite {
+    display:block;
+    margin-top:1.5rem;
+    font-size:.8rem;
+    font-style:normal;
+    letter-spacing:.3em;
+    color: var(--gold);
+    text-transform:uppercase;
+  }
+
+  /* ── TOPOLOGY ── */
+  #topology .topo-grid {
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+    gap:1.5rem;
+    margin-top:2rem;
+  }
+  .topo-card {
+    border-left: 2px solid var(--gold);
+    padding: 1.2rem 1.5rem;
+    background: rgba(201,168,76,0.03);
+  }
+  .topo-card h3 { margin-top:0; font-size:.95rem; color:var(--amber); }
+  .topo-card p  { font-size:.88rem; line-height:1.75; margin:0; }
+
+  /* ── TIMELINE ── */
+  #timeline {
+    background: var(--deep);
+    border-top: 1px solid rgba(201,168,76,0.1);
+  }
+  .tl-items { margin-top:2rem; }
+  .tl-item {
+    display:grid;
+    grid-template-columns: 100px 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .tl-year {
+    font-size:1.1rem;
+    color: var(--gold);
+    font-weight:300;
+    padding-top:.2rem;
+  }
+  .tl-body h3 { margin:0 0 .4rem; font-size:1rem; color:#fff; }
+  .tl-body p  { margin:0; font-size:.9rem; color:rgba(232,220,200,0.7); }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align:center;
+    padding: 3rem 2rem;
+    border-top: 1px solid rgba(201,168,76,0.15);
+    background: var(--deep);
+  }
+  footer p {
+    font-size:.75rem;
+    color:rgba(232,220,200,0.3);
+    letter-spacing:.15em;
+    margin:0;
+  }
+  footer .gold { color:var(--gold); }
+
+  /* ── REVEAL ANIMATION ── */
+  .reveal {
+    opacity:0;
+    transform: translateY(30px);
+    transition: opacity .8s ease, transform .8s ease;
+  }
+  .reveal.visible {
+    opacity:1;
+    transform:none;
+  }
+
+  /* ── GLASS LIGHT OVERLAY ── */
+  .glass-light {
+    pointer-events:none;
+    position:absolute; top:0; left:0; right:0; bottom:0;
+    background:
+      radial-gradient(ellipse 30% 60% at 15% 50%, rgba(80,140,200,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 30% 60% at 85% 50%, rgba(220,140,60,0.06) 0%, transparent 70%);
+    animation: glassshift 12s ease-in-out infinite alternate;
+  }
+  @keyframes glassshift {
+    0%  { opacity:.4; }
+    100%{ opacity:1; }
+  }
+
+  @media(max-width:600px){
+    .photo-pair { grid-template-columns:1fr; }
+    .tl-item    { grid-template-columns:1fr; gap:.5rem; }
+    nav         { gap:1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Audio -->
+<audio id="bgm" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+<div id="audio-ctrl" onclick="toggleAudio()" title="背景音樂">
+  <svg id="audio-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+</div>
+
+<!-- Hero -->
+<section id="hero" class="full-bleed" style="max-width:100%;padding:0;">
+  <div class="glass-light"></div>
+  <div class="hero-towers" id="towers-container"></div>
+  <h1>永恆聖家堂</h1>
+  <p class="subtitle">Antoni Gaudí · 逝世百週年紀念</p>
+  <p class="year-badge">1926 · 6月10日 · 2026</p>
+  <div class="scroll-hint">向下探索</div>
+</section>
+
+<!-- Nav -->
+<nav>
+  <a href="#centenary">百週年</a>
+  <a href="#geometry">幾何哲學</a>
+  <a href="#facades">三大立面</a>
+  <a href="#virtual-tour">虛擬參觀</a>
+  <a href="#topology">拓樸邏輯</a>
+  <a href="#timeline">建造歷程</a>
+</nav>
+
+<!-- Centenary -->
+<div id="centenary" style="position:relative; padding:6rem 2rem; text-align:center;">
+  <div class="centenary-date">1926–2026</div>
+  <div class="centenary-content">
+    <p class="section-label reveal">百週年紀念</p>
+    <h2 class="reveal" style="max-width:700px;margin:0 auto 1.5rem;">1926年6月10日<br>高第於巴塞隆納安息</h2>
+    <div class="divider" style="margin:1.5rem auto;" class="reveal"></div>
+    <p class="reveal" style="max-width:620px;margin:0 auto 2rem;font-size:1.05rem;line-height:1.9;color:rgba(232,220,200,0.8);">
+      2026年，耶穌基督之塔以 <strong style="color:var(--gold)">172.5公尺</strong> 封頂，
+      成為世界最高教堂。<br>
+      144年的集體意志，在這一刻圓滿。
+    </p>
+    <div class="countdown-grid reveal">
+      <div class="cnt-item"><span class="cnt-num">144</span><span class="cnt-label">建造年</span></div>
+      <div class="cnt-item"><span class="cnt-num">18</span><span class="cnt-label">座塔樓</span></div>
+      <div class="cnt-item"><span class="cnt-num">172.5m</span><span class="cnt-label">主塔高度</span></div>
+      <div class="cnt-item"><span class="cnt-num">487萬</span><span class="cnt-label">2025年訪客</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Quote 1 -->
+<div class="blockquote-section">
+  <blockquote class="reveal">
+    「我的客戶並不著急。」
+    <cite>— Antoni Gaudí</cite>
+  </blockquote>
+</div>
+
+<!-- Geometry -->
+<section id="geometry" style="background:var(--stone);max-width:100%;padding:5rem 0;">
+  <div style="max-width:1100px;margin:0 auto;padding:0 2rem;">
+    <p class="section-label reveal">幾何哲學</p>
+    <h2 class="reveal">師法自然的數理語言</h2>
+    <p class="reveal" style="max-width:680px;">高第的「師法自然」超越表面裝飾，深入自然的生成秩序與物理法則。他觀察樹木、骨骼、貝殼，關注的是它們如何以最少材料達成最大穩定性。</p>
+    <div class="geo-grid">
+      <div class="geo-card reveal">
+        <div class="geo-icon">⛓</div>
+        <h3>懸鏈線</h3>
+        <p>柔性鏈條在重力下自然下垂形成的曲線，倒轉後得到理想受壓拱形，消除彎矩與側推力。<em>讓形式由力學本身來決定。</em></p>
+      </div>
+      <div class="geo-card reveal">
+        <div class="geo-icon">〜</div>
+        <h3>雙曲拋物面 · 直紋曲面</h3>
+        <p>有效將載重導入支撐系統，材料更薄卻保有承載力，形成具有整體性的受力殼層。</p>
+      </div>
+      <div class="geo-card reveal">
+        <div class="geo-icon">🌿</div>
+        <h3>螺旋 · 樹狀分枝</h3>
+        <p>模仿自然界分枝邏輯，柱體自下而上分叉，讓垂直載重沿多條路徑轉移並分散至地面。</p>
+      </div>
+      <div class="geo-card reveal">
+        <div class="geo-icon">∞</div>
+        <h3>分形 · 非歐幾里得空間</h3>
+        <p>尺度遞迴、枝狀分叉、自相似結構，以曲率取代直線直角，創造連續流動的空間場域。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Photos -->
+<section id="photos" style="background:var(--stone);max-width:100%;padding:5rem 0;">
+  <div style="max-width:1100px;margin:0 auto;padding:0 2rem;">
+    <p class="section-label reveal">影像</p>
+    <h2 class="reveal">石光之殿</h2>
+    <img src="gaudi.png" alt="聖家堂" class="photo-hero reveal" onerror="this.style.display='none'">
+    <div class="photo-pair">
+      <img src="images.webp" alt="聖家堂細節" class="reveal" onerror="this.style.display='none'">
+      <div style="background:linear-gradient(135deg,#0d0a00,#1a0e00);border-radius:4px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(201,168,76,0.1);" class="reveal">
+        <div style="text-align:center;padding:2rem;">
+          <div style="font-size:4rem;margin-bottom:1rem;opacity:.3;">✦</div>
+          <p style="color:rgba(232,220,200,0.4);font-size:.85rem;letter-spacing:.1em;">石光 · 永恆</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Facades -->
+<section id="facades" style="max-width:100%;padding:5rem 0;">
+  <div style="max-width:1100px;margin:0 auto;padding:0 2rem;">
+    <p class="section-label reveal">三大立面</p>
+    <h2 class="reveal">刻在石頭上的立體聖經</h2>
+    <p class="reveal" style="max-width:680px;">高第將聖家堂構想為一部石刻聖經，使不識字的信眾僅憑凝視建築，便能領悟基督信仰的歷史與奧義。</p>
+  </div>
+  <div class="facade-row reveal">
+    <div class="facade-panel nativity">
+      <span class="facade-symbol">☀</span>
+      <span class="facade-tag">東側 · 已完成</span>
+      <h3>誕生立面</h3>
+      <p>耶穌降生的喜悅、萬物復甦。繁複有機裝飾，融入烏龜、變色龍等動植物元素。高第生前唯一親自主導的立面，1984年列為世界文化遺產。</p>
+    </div>
+    <div class="facade-panel passion">
+      <span class="facade-symbol">✟</span>
+      <span class="facade-tag">西側 · 已完成</span>
+      <h3>受難立面</h3>
+      <p>耶穌受難、犧牲與死亡的悲劇感。線條簡潔剛硬，蘇比拉奇斯的骨架雕塑傳達極致痛苦與張力，與誕生立面形成強烈對比。</p>
+    </div>
+    <div class="facade-panel glory">
+      <span class="facade-symbol">✦</span>
+      <span class="facade-tag">南側 · 建設中</span>
+      <h3>榮耀立面</h3>
+      <p>人類的起源、審判、救贖與永恆榮耀。規模最宏大的主入口，預計2034–2035年完工。設有橫跨馬略卡街的巨型階梯廣場。</p>
+    </div>
+  </div>
+</section>
+
+<!-- Towers Table -->
+<section id="towers" style="max-width:100%;padding:4rem 0;background:var(--stone);">
+  <div style="max-width:1100px;margin:0 auto;padding:0 2rem;">
+    <p class="section-label reveal">塔樓體系</p>
+    <h2 class="reveal">18座塔樓 · 神聖象徵體系</h2>
+    <table class="tower-table reveal">
+      <thead>
+        <tr>
+          <th>象徵</th><th>數量</th><th>高度</th><th>狀態</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>十二門徒</td><td>12座</td><td>98–112m</td>
+          <td><span class="complete">✓ 8座完成</span></td>
+        </tr>
+        <tr>
+          <td>四位福音書作者</td><td>4座</td><td>135m</td>
+          <td><span class="complete">✓ 全數完成（2023）</span></td>
+        </tr>
+        <tr>
+          <td>聖母瑪利亞</td><td>1座</td><td>138m</td>
+          <td><span class="complete">✓ 2021年完成</span></td>
+        </tr>
+        <tr>
+          <td>耶穌基督 ★</td><td>1座</td><td>172.5m</td>
+          <td><span class="complete">✓ 2026年祝聖</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Virtual Tour -->
+<div id="virtual-tour">
+  <div class="inner">
+    <p class="section-label reveal">官方虛擬導覽</p>
+    <h2 class="reveal">踏入聖家堂</h2>
+    <p class="reveal">由聖家堂官方提供的 360° 全景導覽，共十個空間分區。</p>
+    <div class="tour-tabs" id="tour-tabs">
+      <button class="tour-tab active" data-src="https://sagradafamilia.org/vvsf_final/Nau_Central/index.htm">內部中殿</button>
+      <button class="tour-tab" data-src="https://sagradafamilia.org/vvsf_final/Naixement/index.htm">誕生立面</button>
+      <button class="tour-tab" data-src="https://sagradafamilia.org/vvsf_final/Passio/index.htm">受難立面</button>
+      <button class="tour-tab" data-src="https://sagradafamilia.org/vvsf_final/Hort/index.htm">花園</button>
+      <button class="tour-tab" data-src="https://sagradafamilia.org/vvsf_final/Absis/index.htm">後殿</button>
+      <button class="tour-tab" data-src="https://sagradafamilia.org/vvsf_final/Claustre_Roser/index.htm">玫瑰迴廊</button>
+      <button class="tour-tab" data-src="https://sagradafamilia.org/vvsf_final/Sagristia/index.htm">西聖器室</button>
+      <button class="tour-tab" data-src="https://sagradafamilia.org/vvsf_final/Cripta/index.htm">地下墓室</button>
+      <button class="tour-tab" data-src="https://sagradafamilia.org/vvsf_final/Tomba/index.htm">高第之墓</button>
+      <button class="tour-tab" data-src="https://sagradafamilia.org/vvsf_final/Obra/index.htm">施工現場</button>
+    </div>
+    <div class="tour-frame-wrap">
+      <iframe id="tour-frame" src="https://sagradafamilia.org/vvsf_final/Nau_Central/index.htm" allowfullscreen></iframe>
+    </div>
+    <p class="tour-note">資料來源：Basílica de la Sagrada Família 官方虛擬導覽</p>
+  </div>
+</div>
+
+<!-- Quote 2 -->
+<div class="blockquote-section" style="background:linear-gradient(to bottom, var(--stone), var(--deep));">
+  <blockquote class="reveal">
+    「直線屬於人類，曲線屬於上帝。」
+    <cite>— Antoni Gaudí</cite>
+  </blockquote>
+</div>
+
+<!-- Topology -->
+<section id="topology" style="background:var(--deep);max-width:100%;padding:5rem 0;">
+  <div style="max-width:1100px;margin:0 auto;padding:0 2rem;">
+    <p class="section-label reveal">拓樸邏輯</p>
+    <h2 class="reveal">內外空間的幾何過渡</h2>
+    <p class="reveal" style="max-width:680px;">聖家堂的幾何過渡是一套從「城市邊界的外部立面」轉換為「以曲率與光線組織的內部宇宙」的數理邏輯演變過程。</p>
+    <div class="topo-grid">
+      <div class="topo-card reveal">
+        <h3>外部 — 離散化骨架</h3>
+        <p>高密度的雕塑立面與塔樓群建立起敘事分區與受力骨架，將力與義編碼於建築表面。</p>
+      </div>
+      <div class="topo-card reveal">
+        <h3>閾值 — 邊界加厚</h3>
+        <p>門廊、迴廊、塔基構成中介過渡帶，動線從線性轉向迴旋，感知從平面分區切換為曲率導向。</p>
+      </div>
+      <div class="topo-card reveal">
+        <h3>內部 — 曲面連續化</h3>
+        <p>載重系統轉移至森林般的分枝柱與連續拱頂，將外部結構語言改寫為可行走的曲面環境。</p>
+      </div>
+      <div class="topo-card reveal">
+        <h3>同構性 — 同一語法</h3>
+        <p>外部向上收束的塔樓群 ↔ 內部向上分枝的柱群。不同形態，相同拓樸關係，同一幾何語法的不同尺度轉譯。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Timeline -->
+<section id="timeline" style="max-width:100%;padding:5rem 0;background:var(--deep);">
+  <div style="max-width:1100px;margin:0 auto;padding:0 2rem;">
+    <p class="section-label reveal">建造歷程</p>
+    <h2 class="reveal">144年 · 三個世紀的史詩</h2>
+    <div class="tl-items">
+      <div class="tl-item reveal">
+        <div class="tl-year">1882</div>
+        <div class="tl-body"><h3>奠基</h3><p>3月19日，聖約瑟瞻禮，聖家堂正式奠基動工。高第於隔年接手設計主導。</p></div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-year">1925</div>
+        <div class="tl-body"><h3>首座塔樓</h3><p>11月30日，高第親眼見證聖家堂第一座塔樓「貝爾納貝塔」完工，是他生前看到的唯一塔樓。</p></div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-year">1926</div>
+        <div class="tl-body"><h3>高第安息 · 百週年</h3><p>6月10日，高第因電車事故辭世，安葬於聖家堂地下墓室。<br><strong style="color:var(--gold)">2026年，教宗良十四世親臨祝聖主塔。</strong></p></div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-year">1984</div>
+        <div class="tl-body"><h3>世界遺產</h3><p>誕生立面與地下墓室被聯合國教科文組織列為世界文化遺產。</p></div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-year">2021</div>
+        <div class="tl-body"><h3>聖母塔完工</h3><p>12月，138公尺高的聖母瑪利亞塔完工，頂部安裝巨大鋼製發光十二角星。</p></div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-year">2023</div>
+        <div class="tl-body"><h3>福音書作者四塔齊聚</h3><p>11月12日，四位福音書作者塔（各135m）全數落成，舉行聯合點燈儀式。</p></div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-year">2026</div>
+        <div class="tl-body"><h3>★ 耶穌基督之塔封頂</h3><p>2月20日，172.5公尺主塔完成十字架安座，登頂世界最高教堂。6月10日，百週年紀念日，教宗主持祝聖彌撒。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Final Quote -->
+<div class="blockquote-section" style="padding:7rem 2rem;">
+  <blockquote class="reveal">
+    「聖家堂是最後的大教堂。<br>它是宗教、科學、歷史、詩學與人道主義的聖殿。」
+    <cite>— 巴塞隆納建築評論</cite>
+  </blockquote>
+</div>
+
+<!-- Footer -->
+<footer>
+  <p>
+    <span class="gold">永恆聖家堂</span> · 高第逝世百週年紀念 · 1926–2026<br><br>
+    虛擬導覽資料來源：<a href="https://sagradafamilia.org" target="_blank" style="color:rgba(201,168,76,0.5);">Basílica de la Sagrada Família</a>
+  </p>
+</footer>
+
+<script>
+// ── Tower silhouette generator ──
+(function(){
+  const heights = [120,180,200,280,340,420,380,460,520,600,520,460,380,340,280,200,180,120];
+  const c = document.getElementById('towers-container');
+  heights.forEach((h,i)=>{
+    const el = document.createElement('div');
+    el.className='tower';
+    el.style.cssText=`height:${h/7}px;animation-delay:${i*0.08}s;opacity:${0.2+Math.random()*0.5};width:${4+Math.random()*6}px;`;
+    c.appendChild(el);
+  });
+})();
+
+// ── Audio ──
+const bgm = document.getElementById('bgm');
+const icon = document.getElementById('audio-icon');
+let playing = false;
+function toggleAudio(){
+  if(playing){ bgm.pause(); icon.innerHTML='<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>';
+  } else {
+    bgm.play().catch(()=>{});
+    icon.innerHTML='<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>';
+  }
+  playing = !playing;
+}
+// Auto-play attempt on first interaction
+document.addEventListener('click', function(){
+  if(!playing){ toggleAudio(); }
+}, {once:true});
+
+// ── Tour tabs ──
+document.getElementById('tour-tabs').addEventListener('click', e=>{
+  const btn = e.target.closest('.tour-tab');
+  if(!btn) return;
+  document.querySelectorAll('.tour-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tour-frame').src = btn.dataset.src;
+});
+
+// ── Scroll reveal ──
+const ro = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+</script>
+</body>
+</html>
